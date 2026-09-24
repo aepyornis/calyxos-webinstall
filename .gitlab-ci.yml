@@ -6,19 +6,21 @@ stages:
 
 lint:
   stage: check
-  image: node:lts
+  image: node:24
   before_script:
-    - npm ci
+    - npm install -g pnpm
+    - pnpm install --frozen-lockfile
   script:
     - npm run lint
 
 pages:
   stage: deploy
-  image: node:lts
+  image: node:24
   before_script:
-    - npm ci
+    - npm install -g pnpm
+    - pnpm install --frozen-lockfile
   script:
-    - npm run build
+    - pnpm run build
   artifacts:
     paths:
       - dist
@@ -42,12 +44,13 @@ build:
     - docker push $IMAGE_TAG
 
 releases:
-  image: node:lts
+  image: node:24
   before_script:
-    - npm ci
+    - npm install -g pnpm
+    - pnpm install --frozen-lockfile
   stage: update-releases
   script:
-    - npm run update-releases
+    - pnpm run update-releases
     - git diff src/assets/releases.json
   artifacts:
     paths:
